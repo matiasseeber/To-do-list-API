@@ -50,4 +50,6 @@ BigInt.prototype['toJSON'] = function () {
 
 process.env.DATABASE_URL = process.env.DATABASE_URL ? process.env.DATABASE_URL : "postgresql://postgres:admin@localhost:5432/To-do list?schema=public";
 
+export const customSalt = process.env.customSalt || '$2a$10$mycustomsaltforsamehash'; // Replace this with your own salt
+
 export default app;

@@ -1,13 +1,16 @@
-import Express from 'express';
-import { createUserModel } from '../model/modelUsers';
-import { sendEmail } from '../helpers/emails/sendEmail';
+import { customSalt } from '../app';
+import { Request, Response } from 'express';
+import bcryptjs from 'bcryptjs';
+import { genericUpdate } from '../helpers/genericUpdate';
 
-export async function createUser(req: Express.Request, res: Express.Response) {
+export async function changeUserPassword(req: Request, res: Response) {
     try {
-        const verification_code = Math.floor(100000 + Math.random() * 900000);
-        const response = await createUserModel(req.body, verification_code);
-        sendEmail(req.body.email, "Verify your account", "verifyEmailTemplate.html", { verification_code });
-        res.status(200).json(response);
+        if (!req.body.password) return res.status(400).json({ msg: "password parameter is required." })
+        const hashedPassword = await bcryptjs.hash(req.body.password, customSalt);
+        await genericUpdate("users", { id: req.decoded.id }, {
+            password: hashedPassword
+        });
+        res.status(200).json({ msg: "Password was changed successfully..." })
     } catch (error) {
         res.status(400).json(error);
     }

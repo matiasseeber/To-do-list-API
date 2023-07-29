@@ -1,10 +1,11 @@
 import app from "./src/app";
+
+import { default as routerUsers } from "./src/routers/routerUsers";
+import { default as authRouter } from "./src/auth/routers/authRouter";
+
 import { verifyToken } from "./src/middlewares/verifyToken"
 
-import { default as routerAuth } from "./src/routers/routerAuth";
-import { default as routerUsers } from "./src/routers/routerUsers";
-
-app.use("/auth", verifyToken, routerAuth)
+app.use("/auth", authRouter);
 
 app.use("/users", verifyToken, routerUsers);
 
