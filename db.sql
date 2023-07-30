@@ -38,3 +38,16 @@ AFTER INSERT
 ON refresh_tokens
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_col();
+
+CREATE TABLE IF NOT EXISTS public.todos_by_users
+(
+    id integer primary key NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    user_id integer,
+	description varchar(256),
+	finished boolean default false,
+	active boolean default true,
+    CONSTRAINT fk_users FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
